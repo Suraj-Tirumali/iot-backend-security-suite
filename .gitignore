@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Evnironment files
+.env
+.env.local
+.env.*.local
+
+# Testing
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+.tox/
+
+# Playwright
+playwright-report/
+test-results/
+
+# IDE
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# Docker
+.docker/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Reports (keep structure, ignore generated files)
+reports/json/*.json
+reports/screenshots/*.png
+reports/recordings/*.gif
+!reports/json/.gitkeep
+!reports/screenshots/.gitkeep
+!reports/recordings/.gitkeep
+
+#Alembic
+alembic/versions/*.pyc
