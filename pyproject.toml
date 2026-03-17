@@ -1,0 +1,85 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "iot-backend-security-suite"
+version = "0.1.0"
+description = "OWASP ISVS-aligned security test suite for IoT backend APIs"
+requires-python = ">=3.13"
+
+dependencies = [
+    # Web framework
+    "fastapi==0.115.6",
+    "uvicorn[standard]==0.32.1",
+
+    # Database
+    "sqlalchemy==2.0.36",
+    "alembic==1.14.0",
+    "asyncpg==0.30.0",
+    "psycopg2-binary==2.9.10",
+
+    # Auth & security
+    "python-jose[cryptography]==3.3.0",
+    "passlib[bcrypt]==1.7.4",
+    "python-multipart==0.0.20",
+
+    # Email
+    "fastapi-mail==1.4.1",
+
+    # Config
+    "pydantic-settings==2.6.1",
+    "pydantic[email]==2.10.3",
+
+    # HTTP client for tests
+    "httpx==0.28.1",
+]
+
+[project.optional-dependencies]
+test = [
+    # Test runner
+    "pytest==8.3.4",
+    "pytest-asyncio==0.25.0",
+    "pytest-xdist==3.6.1",
+    "pytest-cov==6.0.0",
+
+    # Playwright for e2e
+    "playwright==1.49.0",
+    "pytest-playwright==0.6.2",
+
+    # Reporting
+    "pytest-html==4.1.1",
+]
+
+dev = [
+    "ruff==0.8.4",
+    "mypy==1.13.0",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+addopts = "-v --tb=short"
+
+[tool.ruff]
+target-version = "py313"
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = false
+ignore_missing_imports = true
+
+[tool.coverage.run]
+source = ["app", "framework"]
+omit = ["*/tests/*", "*/__init__.py"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 60
+[tool.hatch.build.targets.wheel]
+packages = ["app", "framework"]
