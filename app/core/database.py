@@ -11,7 +11,7 @@ from app.core.config import settings
 
 # Async engine - uses asyncpg driver under the hood
 engine = create_async_engine(
-    settings.DATABSE_URL,
+    settings.DATABASE_URL,
     echo=settings.APP_ENV == "development",   # Log SQL only in dev
     pool_pre_ping=True,   # Verify connection health before using pool
     pool_size=10,

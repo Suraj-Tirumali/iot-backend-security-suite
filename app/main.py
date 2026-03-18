@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
-from app.routers import auth
+from app.routers import auth, password_reset
 
 app = FastAPI(
     title="IoT Backend Security Suite - Target API",
@@ -26,6 +26,7 @@ app.add_middleware(
 
 # Routers
 app.include_router(auth.router)
+app.include_router(password_reset.router)
 
 
 @app.get("/health", tags=["health"])
