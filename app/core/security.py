@@ -1,48 +1,56 @@
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
+import bcrypt
 from jose import JWTError, jwt
-from passlib.context import CryptContext
 
 from app.core.config import settings
-
-# password hashing context - bcrpyt is the industry standard
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def hash_password(plain_password: str) -> str:
     """Hash a plain text password using bcrypt."""
-    return pwd_context.hash(plain_password)
+    password_bytes = plain_password.encode("utf-8")
+    salt = bcrypt.gensalt()
+    return bcrypt.hashpw(password_bytes, salt).decode("utf-8")
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Verify a plain text password against a bcrypt hash."""
-    return pwd_context.verify(plain_password, hashed_password)
+    return bcrypt.checkpw(
+        plain_password.encode("utf-8"),
+        hashed_password.encode("utf-8"),
+    )
 
 
 def create_access_token(subject: str | Any) -> str:
     """
     Create a signed JWT access token.
-    - subject: typically the user's ID or email
+    - subject: typically the user's email
     - expiry: ACCESS_TOKEN_EXPIRE_MINUTES from settings
     """
-    expire = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    expire = datetime.now(timezone.utc) + timedelta(
+        minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
+    )
     payload = {
         "sub": str(subject),
         "exp": expire,
         "type": "access",
     }
     return jwt.encode(
-        payload, settings.SECRET_KEY, algorithm=settings.JWT_ALGORITHM,
+        payload,
+        settings.SECRET_KEY,
+        algorithm=settings.JWT_ALGORITHM,
     )
 
 
 def create_reset_token(subject: str | Any) -> str:
     """
     Create a short-lived JWT for password reset.
-    - Separate token type prevents reset tokens being used as access tokens
+    Separate token type prevents reset tokens being used as access tokens.
     """
-    expire = datetime.now(timezone.utc) + timedelta(minutes=settings.RESET_TOKEN_EXPIRE_MINUTES)
+    expire = datetime.now(timezone.utc) + timedelta(
+        minutes=settings.RESET_TOKEN_EXPIRE_MINUTES
+    )
     payload = {
         "sub": str(subject),
         "exp": expire,
@@ -58,7 +66,7 @@ def create_reset_token(subject: str | Any) -> str:
 def decode_token(token: str) -> dict:
     """
     Decode and validate a JWT.
-    - Raises JWTError if the token is invalid, expired, or tampered with.
+    Raises JWTError if token is invalid, expired, or tampered with.
     """
     try:
         payload = jwt.decode(
