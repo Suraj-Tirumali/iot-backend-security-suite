@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
 from app.routers import auth, password_reset, devices
+from app.routers.vulnerable import weak_auth, no_rate_limit
 
 app = FastAPI(
     title="IoT Backend Security Suite - Target API",
@@ -28,6 +29,10 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(password_reset.router)
 app.include_router(devices.router)
+
+# Vulnerable routers  - intentional test targets, documented in ISVS test suite
+app.include_router(weak_auth.router)
+app.include_router(no_rate_limit.router)
 
 
 @app.get("/health", tags=["health"])
