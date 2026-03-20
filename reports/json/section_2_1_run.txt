@@ -1,0 +1,53 @@
+/home/suraj/iot-backend-security-suite/.venv/lib/python3.13/site-packages/pytest_asyncio/plugin.py:207: PytestDeprecationWarning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
+The event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: "function", "class", "module", "package", "session"
+
+  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))
+============================= test session starts ==============================
+platform linux -- Python 3.13.12, pytest-8.3.4, pluggy-1.6.0 -- /home/suraj/iot-backend-security-suite/.venv/bin/python3.13
+cachedir: .pytest_cache
+metadata: {'Python': '3.13.12', 'Platform': 'Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39', 'Packages': {'pytest': '8.3.4', 'pluggy': '1.6.0'}, 'Plugins': {'xdist': '3.6.1', 'base-url': '2.1.0', 'anyio': '4.12.1', 'metadata': '3.1.1', 'cov': '6.0.0', 'html': '4.1.1', 'playwright': '0.6.2', 'asyncio': '0.25.0'}, 'Base URL': ''}
+rootdir: /home/suraj/iot-backend-security-suite
+configfile: pyproject.toml
+plugins: xdist-3.6.1, base-url-2.1.0, anyio-4.12.1, metadata-3.1.1, cov-6.0.0, html-4.1.1, playwright-0.6.2, asyncio-0.25.0
+asyncio: mode=Mode.AUTO, asyncio_default_fixture_loop_scope=None
+collecting ... collected 23 items
+
+tests/isvs/section_2_1/test_authorization_enforcement.py::test_devices_endpoint_requires_auth PASSED [  4%]
+tests/isvs/section_2_1/test_authorization_enforcement.py::test_me_endpoint_requires_auth PASSED [  8%]
+tests/isvs/section_2_1/test_authorization_enforcement.py::test_telemetry_endpoint_requires_auth PASSED [ 13%]
+tests/isvs/section_2_1/test_authorization_enforcement.py::test_vulnerable_bola_exposes_any_user PASSED [ 17%]
+tests/isvs/section_2_1/test_authorization_enforcement.py::test_secure_endpoint_does_not_expose_other_users PASSED [ 21%]
+tests/isvs/section_2_1/test_brute_force_protection.py::test_secure_login_has_no_user_enumeration PASSED [ 26%]
+tests/isvs/section_2_1/test_brute_force_protection.py::test_vulnerable_endpoint_has_user_enumeration PASSED [ 30%]
+tests/isvs/section_2_1/test_brute_force_protection.py::test_vulnerable_endpoint_has_no_brute_force_protection PASSED [ 34%]
+tests/isvs/section_2_1/test_jwt_controls.py::test_secure_token_has_valid_algorithm PASSED [ 39%]
+tests/isvs/section_2_1/test_jwt_controls.py::test_secure_token_has_expiry PASSED [ 43%]
+tests/isvs/section_2_1/test_jwt_controls.py::test_secure_token_expiry_is_reasonable PASSED [ 47%]
+tests/isvs/section_2_1/test_jwt_controls.py::test_secure_token_has_subject_claim PASSED [ 52%]
+tests/isvs/section_2_1/test_jwt_controls.py::test_secure_token_has_type_claim PASSED [ 56%]
+tests/isvs/section_2_1/test_jwt_controls.py::test_weak_token_detected_as_insecure PASSED [ 60%]
+tests/isvs/section_2_1/test_jwt_controls.py::test_tampered_token_rejected PASSED [ 65%]
+tests/isvs/section_2_1/test_jwt_controls.py::test_missing_token_rejected PASSED [ 69%]
+tests/isvs/section_2_1/test_password_policy.py::test_weak_passwords_rejected[short1A-too short \u2014 under 8 characters] PASSED [ 73%]
+tests/isvs/section_2_1/test_password_policy.py::test_weak_passwords_rejected[alllowercase1-no uppercase letter] PASSED [ 78%]
+tests/isvs/section_2_1/test_password_policy.py::test_weak_passwords_rejected[ALLUPPERCASE1-no lowercase letter \u2014 acceptable by current policy] PASSED [ 82%]
+tests/isvs/section_2_1/test_password_policy.py::test_weak_passwords_rejected[NoDigitsHere-no digit] PASSED [ 86%]
+tests/isvs/section_2_1/test_password_policy.py::test_weak_passwords_rejected[12345678-no uppercase letter] PASSED [ 91%]
+tests/isvs/section_2_1/test_password_policy.py::test_strong_password_accepted PASSED [ 95%]
+tests/isvs/section_2_1/test_password_policy.py::test_duplicate_email_rejected PASSED [100%]
+
+=============================== warnings summary ===============================
+tests/isvs/section_2_1/test_authorization_enforcement.py::test_devices_endpoint_requires_auth
+  /home/suraj/iot-backend-security-suite/.venv/lib/python3.13/site-packages/pytest_asyncio/plugin.py:854: DeprecationWarning: The event_loop fixture provided by pytest-asyncio has been redefined in
+  /home/suraj/iot-backend-security-suite/tests/conftest.py:17
+  Replacing the event_loop fixture with a custom implementation is deprecated
+  and will lead to errors in the future.
+  If you want to request an asyncio event loop with a scope other than function
+  scope, use the "scope" argument to the asyncio mark when marking the tests.
+  If you want to return different types of event loops, use the event_loop_policy
+  fixture.
+  
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 23 passed, 1 warning in 3.46s =========================
