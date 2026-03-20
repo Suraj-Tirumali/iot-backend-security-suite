@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
@@ -25,7 +25,24 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Routers
+
+@app.middleware("http")
+async def add_security_headers(request: Request, call_next) -> Response:
+    """
+    ISVS 4.3 - Add security headers to every response.
+    These headers are the baseline for any API serving IoT devices.
+    """
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-xSS-Protection"] = "; mode=block"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Cache-Control"] = "no-store"
+    response.headers["Server"] = ""
+    return response
+
+
+# Secure Routers
 app.include_router(auth.router)
 app.include_router(password_reset.router)
 app.include_router(devices.router)

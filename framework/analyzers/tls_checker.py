@@ -11,6 +11,10 @@ from dataclasses import dataclass, field
 from typing import Any
 from urllib.parse import urlparse
 
+# WSL2 and some Linux distros require explicit CA bundle path
+import certifi
+CA_BUNDLE = certifi.where()
+
 
 @dataclass
 class TLSCheckResult:
@@ -37,12 +41,13 @@ def check_tls(host: str, port: int = 443, timeout: int = 10) -> TLSCheckResult:
     """
     result = TLSCheckResult(host=host, port=port)
 
-    # Check TLS 1.2 support
+    # Check TLS 1.2+ support
     try:
         ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
         ctx.minimum_version = ssl.TLSVersion.TLSv1_2
         ctx.check_hostname = True
         ctx.verify_mode = ssl.CERT_REQUIRED
+        ctx.load_verify_locations(CA_BUNDLE)
 
         with socket.create_connection((host, port), timeout=timeout) as sock:
             with ctx.wrap_socket(sock, server_hostname=host) as ssock:
@@ -67,9 +72,7 @@ def check_tls(host: str, port: int = 443, timeout: int = 10) -> TLSCheckResult:
             f"CRITICAL [ISVS 6.2]: Certificate verification failed: {e}"
         )
     except ssl.SSLError as e:
-        result.issues.append(
-            f"CRITICAL [ISVS 6.1]: TLS error: {e}"
-        )
+        result.issues.append(f"CRITICAL [ISVS 6.1]: TLS error: {e}")
     except (socket.timeout, ConnectionRefusedError, OSError) as e:
         result.issues.append(f"WARNING: Could not connect to {host}:{port} — {e}")
 
@@ -90,7 +93,7 @@ def check_tls(host: str, port: int = 443, timeout: int = 10) -> TLSCheckResult:
     except ssl.SSLError:
         result.passed.append("TLS 1.0 correctly rejected by server")
     except (socket.timeout, ConnectionRefusedError, OSError):
-        pass  # Connection failure is not a TLS 1.0 issue
+        pass
 
     return result
 

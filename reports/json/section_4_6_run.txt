@@ -1,0 +1,66 @@
+/home/suraj/iot-backend-security-suite/.venv/lib/python3.13/site-packages/pytest_asyncio/plugin.py:207: PytestDeprecationWarning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
+The event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: "function", "class", "module", "package", "session"
+
+  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))
+============================= test session starts ==============================
+platform linux -- Python 3.13.12, pytest-8.3.4, pluggy-1.6.0 -- /home/suraj/iot-backend-security-suite/.venv/bin/python3.13
+cachedir: .pytest_cache
+metadata: {'Python': '3.13.12', 'Platform': 'Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39', 'Packages': {'pytest': '8.3.4', 'pluggy': '1.6.0'}, 'Plugins': {'xdist': '3.6.1', 'base-url': '2.1.0', 'anyio': '4.12.1', 'metadata': '3.1.1', 'cov': '6.0.0', 'html': '4.1.1', 'playwright': '0.6.2', 'asyncio': '0.25.0'}, 'Base URL': ''}
+rootdir: /home/suraj/iot-backend-security-suite
+configfile: pyproject.toml
+plugins: xdist-3.6.1, base-url-2.1.0, anyio-4.12.1, metadata-3.1.1, cov-6.0.0, html-4.1.1, playwright-0.6.2, asyncio-0.25.0
+asyncio: mode=Mode.AUTO, asyncio_default_fixture_loop_scope=None
+collecting ... collected 22 items
+
+tests/isvs/section_4/test_error_disclosure.py::test_secure_404_does_not_leak_internals PASSED [  4%]
+tests/isvs/section_4/test_error_disclosure.py::test_secure_401_does_not_leak_internals PASSED [  9%]
+tests/isvs/section_4/test_error_disclosure.py::test_vulnerable_debug_endpoint_leaks_internals PASSED [ 13%]
+tests/isvs/section_4/test_error_disclosure.py::test_secure_endpoint_error_format_is_consistent PASSED [ 18%]
+tests/isvs/section_4/test_input_validation.py::test_oversized_payload_handled PASSED [ 22%]
+tests/isvs/section_4/test_input_validation.py::test_invalid_json_returns_422 PASSED [ 27%]
+tests/isvs/section_4/test_input_validation.py::test_missing_required_fields_returns_422 PASSED [ 31%]
+tests/isvs/section_4/test_input_validation.py::test_invalid_email_format_rejected PASSED [ 36%]
+tests/isvs/section_4/test_input_validation.py::test_sql_injection_attempt_handled PASSED [ 40%]
+tests/isvs/section_4/test_security_headers.py::test_x_content_type_options_header PASSED [ 45%]
+tests/isvs/section_4/test_security_headers.py::test_x_frame_options_header PASSED [ 50%]
+tests/isvs/section_4/test_security_headers.py::test_content_type_header_is_json PASSED [ 54%]
+tests/isvs/section_4/test_security_headers.py::test_server_header_does_not_expose_version PASSED [ 59%]
+tests/isvs/section_6/test_certificate_validation.py::test_httpx_client_validates_certificates_by_default PASSED [ 63%]
+tests/isvs/section_6/test_certificate_validation.py::test_tls_analyzer_reports_certificate_details PASSED [ 68%]
+tests/isvs/section_6/test_certificate_validation.py::test_tls_analyzer_structure_is_correct PASSED [ 72%]
+tests/isvs/section_6/test_tls_enforcement.py::test_api_is_accessible PASSED [ 77%]
+tests/isvs/section_6/test_tls_enforcement.py::test_tls_checker_validates_known_good_host PASSED [ 81%]
+tests/isvs/section_6/test_tls_enforcement.py::test_tls_checker_detects_protocol_version PASSED [ 86%]
+tests/isvs/section_6/test_tls_enforcement.py::test_http_redirect_checker_detects_no_redirect PASSED [ 90%]
+tests/isvs/section_6/test_tls_enforcement.py::test_local_dev_server_does_not_use_tls PASSED [ 95%]
+tests/isvs/section_6/test_tls_enforcement.py::test_sensitive_endpoints_require_auth_over_http PASSED [100%]
+
+=============================== warnings summary ===============================
+tests/isvs/section_4/test_error_disclosure.py::test_secure_404_does_not_leak_internals
+  /home/suraj/iot-backend-security-suite/.venv/lib/python3.13/site-packages/pytest_asyncio/plugin.py:854: DeprecationWarning: The event_loop fixture provided by pytest-asyncio has been redefined in
+  /home/suraj/iot-backend-security-suite/tests/conftest.py:17
+  Replacing the event_loop fixture with a custom implementation is deprecated
+  and will lead to errors in the future.
+  If you want to request an asyncio event loop with a scope other than function
+  scope, use the "scope" argument to the asyncio mark when marking the tests.
+  If you want to return different types of event loops, use the event_loop_policy
+  fixture.
+  
+    warnings.warn(
+
+tests/isvs/section_6/test_certificate_validation.py::test_tls_analyzer_reports_certificate_details
+tests/isvs/section_6/test_certificate_validation.py::test_tls_analyzer_structure_is_correct
+tests/isvs/section_6/test_tls_enforcement.py::test_tls_checker_validates_known_good_host
+tests/isvs/section_6/test_tls_enforcement.py::test_tls_checker_detects_protocol_version
+  /home/suraj/iot-backend-security-suite/framework/analyzers/tls_checker.py:82: DeprecationWarning: ssl.TLSVersion.TLSv1 is deprecated
+    ctx_old.minimum_version = ssl.TLSVersion.TLSv1
+
+tests/isvs/section_6/test_certificate_validation.py::test_tls_analyzer_reports_certificate_details
+tests/isvs/section_6/test_certificate_validation.py::test_tls_analyzer_structure_is_correct
+tests/isvs/section_6/test_tls_enforcement.py::test_tls_checker_validates_known_good_host
+tests/isvs/section_6/test_tls_enforcement.py::test_tls_checker_detects_protocol_version
+  /home/suraj/iot-backend-security-suite/framework/analyzers/tls_checker.py:83: DeprecationWarning: ssl.TLSVersion.TLSv1 is deprecated
+    ctx_old.maximum_version = ssl.TLSVersion.TLSv1
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 22 passed, 9 warnings in 17.46s ========================
