@@ -1,0 +1,123 @@
+name: Security Test Suite
+
+on:
+  push:
+    branches: ["master", "main"]
+  pull_request:
+    branches: ["master", "main"]
+
+jobs:
+  unit-tests:
+    name: Unit Tests (no server required)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -e ".[test,dev]"
+
+      - name: Run unit tests
+        run: |
+          pytest tests/unit/ -v --tb=short --junitxml=reports/junit-unit.xml
+
+      - name: Upload unit test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: unit-test-results
+          path: reports/junit-unit.xml
+
+  integration-tests:
+    name: ISVS Integration Tests
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: iotuser
+          POSTGRES_PASSWORD: iotpassword
+          POSTGRES_DB: iotdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      APP_ENV: testing
+      SECRET_KEY: ci-test-secret-key-not-for-production-use
+      JWT_ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: 30
+      RESET_TOKEN_EXPIRE_MINUTES: 15
+      DATABASE_URL: postgresql+asyncpg://iotuser:iotpassword@localhost:5432/iotdb
+      MAIL_USERNAME: ci-test
+      MAIL_PASSWORD: ci-test
+      MAIL_FROM: noreply@ci-test.dev
+      MAIL_PORT: 587
+      MAIL_SERVER: sandbox.smtp.mailtrap.io
+      MAIL_STARTTLS: "True"
+      MAIL_SSL_TLS: "False"
+      RATE_LIMIT_MAX_ATTEMPTS: 5
+      RATE_LIMIT_WINDOW_SECONDS: 60
+      TARGET_BASE_URL: http://localhost:8000
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -e ".[test,dev]"
+
+      - name: Run Alembic migrations
+        run: |
+          alembic upgrade head
+
+      - name: Start FastAPI server
+        run: |
+          uvicorn app.main:app --host 0.0.0.0 --port 8000 --no-server-header &
+          echo "Waiting for server to be ready..."
+          for i in {1..15}; do
+            curl -sf http://localhost:8000/health && break
+            sleep 2
+          done
+
+      - name: Run ISVS 2.1 tests
+        run: |
+          pytest tests/isvs/section_2_1/ -v --tb=short \
+            --junitxml=reports/junit-section-2-1.xml
+
+      - name: Run ISVS Section 4 tests
+        run: |
+          pytest tests/isvs/section_4/ -v --tb=short \
+            --junitxml=reports/junit-section-4.xml
+
+      - name: Run ISVS Section 6 tests
+        run: |
+          pytest tests/isvs/section_6/ -v --tb=short \
+            --junitxml=reports/junit-section-6.xml
+
+      - name: Upload integration test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: integration-test-results
+          path: reports/junit-*.xml
